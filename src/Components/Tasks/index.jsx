@@ -31,11 +31,11 @@ export default function () {
 
     const [tasks, setTasks] = useState({
         "todos": {
-            title: "Tareas Por Hacer",
+            title: "Por Hacer",
             items: [item1, item2]
         },
         "completed": {
-            title: "Tareas Completadas",
+            title: "Completadas",
             items: [item3]
         }
     })

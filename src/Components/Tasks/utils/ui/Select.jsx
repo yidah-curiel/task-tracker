@@ -53,7 +53,7 @@ function CustomSelect({ handleChange, selectOptions, selectName }) {
                     icon: classes.icon
                 }}
             >
-                {selectOptions.map((e, i) =>
+                {selectOptions && selectOptions.map((e, i) =>
                         <MenuItem className={classes.menu_item} key={i} value={e.value}>{e.label}</MenuItem>
                     )}
 

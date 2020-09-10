@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import Select from './Select'
+import Select from './ui/Select'
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
