@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Filters from './utils/Filters'
+import {v4} from "uuid"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -22,8 +23,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function Toolbar() {
+function Toolbar({setTasks}) {
 	const classes = useStyles();
+
+	const [text, setText] = useState('')
+
+	const addTask = () => {
+		const newTask = {
+			id: v4(),
+			description: text,
+		}
+		setTasks(prev => {
+			const prevTasks = {...prev}
+			prevTasks["todos"].items.unshift(newTask)
+			return prevTasks
+		})
+	}
 
 	return (
 		<Paper square className={classes.root}>

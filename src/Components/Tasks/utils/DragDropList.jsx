@@ -16,6 +16,8 @@ function DraggableList({name, items, listKey}) {
 
     console.log(items)
     console.log(listKey)
+
+    // droppableId para que el framework sepa a cual droppable nos referimos (en origen y en destino del drag y drop)
     return (
         <Droppable droppableId={listKey}> 
             {(provided) => (  
