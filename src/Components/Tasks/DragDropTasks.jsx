@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     },
     listContainer: {
         backgroundColor: '#e0e0e0',
-        padding: '0% 5%',
+        padding: '0% 2%',
         flexDirection: 'column',
         margin: '2%',
         borderRadius: 10,
@@ -93,6 +93,7 @@ function Tasks({tasks, setTasks}) {
                         >
                         <h5>{"Pendientes"}</h5>
                                 <DragDropList 
+                                showCompleted={showCompleted}
                                 name={"Por Hacer"}
                                 items={tasks.todos.items}
                                 listKey={"todos"}
@@ -103,6 +104,7 @@ function Tasks({tasks, setTasks}) {
                     <Grid item container className={clsx(classes.listContainer, classes.halfListContainer, classes.completedList)}>
                         <h5>{"Terminadas"}</h5>
                                 <DragDropList 
+                                showCompleted={true}
                                 name={"Completadas"}
                                 items={tasks.completed.items}
                                 listKey={"completed"}

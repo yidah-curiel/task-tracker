@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import List from '@material-ui/core/List';
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import ListItem from '@material-ui/core/ListItem';
+import TaskItem from './TaskItem';
 import clsx from 'clsx';
 
 const useStyles = makeStyles({
@@ -23,7 +24,7 @@ const useStyles = makeStyles({
     }
 });
 
-function DraggableList({name, items, listKey}) {
+function DraggableList({name, items, listKey, showCompleted}) {
     const classes = useStyles();
 
     console.log(items)
@@ -33,7 +34,8 @@ function DraggableList({name, items, listKey}) {
     return (
         <Droppable droppableId={listKey}> 
             {(provided) => (  
-                <List  
+                <List
+                    dense  
                     ref={provided.innerRef}
                     {...provided.droppableProps}
                     className={classes.root} 
@@ -49,7 +51,8 @@ function DraggableList({name, items, listKey}) {
                                         listKey === "completed" ? 
                                         clsx(classes.listItem, classes.completedItem)
                                         : classes.listItem}>
-                                        {el.description} {el.duration}
+                                            <TaskItem showCompleted={showCompleted}/>
+                                        
                                 </ListItem>
                             )}
                         </Draggable>
