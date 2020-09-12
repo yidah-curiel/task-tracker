@@ -75,6 +75,7 @@ function Tasks({tasks, setTasks}) {
     return (
         <Paper variant="outlined" className={classes.root}>
             <Grid container>
+                 {/* El contexto donde se podra hacer el DragDrop */}
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Grid item xs={12} className={classes.headerContainer}>    
                         <h3>Tareas</h3>
@@ -85,13 +86,20 @@ function Tasks({tasks, setTasks}) {
                                 "cerrar tareas realizadas"}
                         </button>
                     </Grid>
+                     {/* El container de la lista tareas por hacer 
+                     estilos diferentes cuando mostramos la lista de tareas terminadas y cuando no*/}
                     <Grid 
-                        item container 
+                        item 
+                        container 
                         className={showCompleted ? 
                             clsx(classes.listContainer, classes.halfListContainer) 
                             : classes.listContainer}
                         >
                         <h5>{"Pendientes"}</h5>
+                            {/* DragDropList contiene el 
+                            Droppable - Para la zona donde se pueden dejar los elementos Draggables
+                            Draggable - El wrapper del elemento que se podra recoger y mover dentro/hacia una zona Draggable
+                            para crear la lista DragDrop */}
                                 <DragDropList 
                                 showCompleted={showCompleted}
                                 name={"Por Hacer"}
@@ -100,6 +108,7 @@ function Tasks({tasks, setTasks}) {
                                 key={"todos"}
                                 />
                     </Grid>
+                     {/* El container de la lista tareas terminadas */}
                     {showCompleted &&
                     <Grid item container className={clsx(classes.listContainer, classes.halfListContainer, classes.completedList)}>
                         <h5>{"Terminadas"}</h5>

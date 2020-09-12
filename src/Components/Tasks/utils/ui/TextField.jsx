@@ -28,7 +28,8 @@ export default function ComposedTextField({
 	onChange,
     error,
 	selectOptions,
-	required
+	required,
+	type
 }) {
 	const classes = useStyles();
 
@@ -40,6 +41,7 @@ export default function ComposedTextField({
 				select={select}
 				name={name}
 				value={value}
+				type={type}
 				required={required}
 				onChange={onChange}
 				InputLabelProps={{

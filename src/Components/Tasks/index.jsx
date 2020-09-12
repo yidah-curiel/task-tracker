@@ -29,7 +29,7 @@ const item3 = {
 
 export default function () {
 
-    const [tasks, setTasks] = useState()
+    const [tasks, setTasks] = useState() 
     const [showGraphs, setShowGraphs] = useState(true)
 
     useEffect(() => {
@@ -43,8 +43,6 @@ export default function () {
                 items: [item3]
             }
         })
-
-        return console.log(tasks)
     }, [])
 
     return (

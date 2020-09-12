@@ -52,15 +52,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function TaskListItem({showCompleted, listKey}) {
+export default function TaskListItem({showCompleted, listKey, task}) {
   const classes = useStyles();
 
   return (
         <Grid container className={classes.root}>
           <Grid item xs={8} sm={showCompleted ? 8 : 6} xl={8} className={classes.col}>
             <ListItemText
-              primary="Descripcion de tarea"
-              secondary="Duración: 30 min"
+              primary={task.description}
+              secondary={`Duración: ${task.duration} min`}
             />
           </Grid>
           <Grid item xs={4} sm={showCompleted ? 4 : 2} xl={1} className={classes.col}>

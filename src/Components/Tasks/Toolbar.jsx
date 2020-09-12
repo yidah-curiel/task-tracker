@@ -1,20 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import { v4 } from "uuid";
-import TextField from "./utils/ui/TextField";
-//import SaveIcon from '@material-ui/icons/Save';
-import useForm from './utils/hooks/useForm';
+//import TextField from "./utils/ui/TextField";
+import FormControl from "@material-ui/core/FormControl";
+import TextField from "@material-ui/core/TextField";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import MenuItem from '@material-ui/core/MenuItem';
 
+
+const inputStyles = makeStyles((theme) => ({
+	root: {
+		display: "flex",
+		flexWrap: "wrap",
+        padding: theme.spacing(1),
+        width: "100%",
+		"& > *": {
+			margin: theme.spacing(1),
+		},
+	},
+}));
 
 const useStyles = makeStyles((theme) => ({
 	root: {
 		display: "flex",
 		flexWrap: "wrap",
 		padding: theme.spacing(1),
-		"& > *": {
+		"& > *": { // style applied to all child elements of root
 			margin: theme.spacing(1),
 			width: '100%',
 			alignItems: "center"
@@ -26,56 +40,137 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Duraciones = [
+	{ value: "", label: "" },
 	{ value: 30, label: "Corta (30 min)" },
 	{ value: 45, label: "Media (45 min)" },
 	{ value: 60, label: "Larga (1 hr)" },
+	{ value: 'other', label: "Otra"}
 ];
 
 function Toolbar({ setTasks }) {
 	const classes = useStyles();
+	const inputClasses = inputStyles()
+
+	const [description, setDescription] = useState('')
+	const [duration, setDuration] = useState('')
+	const [custDuration, setCustDuration] = useState(false)
+	const [descriptionError, setDescriptionError] = useState(false)
+	const [durationError, setDurationError] = useState(false)
+
+	const handleSubmit = () => {
+		if (duration && description.length) {
+			if(descriptionError || durationError) {
+				setDescriptionError(false)
+				setDurationError(false)
+			}
+			addTask()
+		} else {
+			if (!description.length)  {
+				setDescriptionError(true)
+			}
+			if (!duration)  {
+				setDurationError(true)
+			}
+		}		
+	}
 
 	const addTask = (inputs) => {
 		const newTask = {
 			id: v4(),
-			...inputs
+			description,
+			duration
 		};
-		setTasks((prev) => {
+		setTasks((prev) => { // agregamos la task al principio de la lista de tareas pendientes
 			const prevTasks = { ...prev };
 			prevTasks["todos"].items.unshift(newTask);
 			return prevTasks;
 		});
+		setDescription('')
+		setDuration('')
 	};
 
-	const { inputs,handleInputChange,handleSubmit } = useForm(addTask);
+	useEffect(() => {
+		console.log(duration)
+		if (duration === 'other') {
+			setCustDuration(true)
+			setDuration(15)
+		}
+	}, [duration])
 
+	
 	return (
 		<Paper square className={classes.root}>
 			<Grid container spacing={3}>
 				<Grid item md={6}>
-					<TextField
-						label={"Nueva Tarea"}
-						helper={"Descripción de tarea requerida"}
-						id={"nueva-tarea-descripcion"}
-						name="description"
-						value={inputs.description ? inputs.description : ""}
-						onChange={handleInputChange}
-						error={false}
-						required={true}
-					/>
+					<FormControl error={descriptionError} className={inputClasses.root}>
+						<TextField
+							label={"Nueva Tarea"}
+							id={"nueva-tarea-descripcion"}
+							name="description"
+							value={description}
+							onChange={(e)=>setDescription(e.target.value)} //{handleInputChange}
+							error={descriptionError}
+							required={true}
+							InputLabelProps={{
+								shrink: true,
+							}}
+						>
+						</TextField>
+						{descriptionError ? (
+							<FormHelperText id={"error-en-nueva-tarea-descripcion"}>{"Descripción de tarea requerida"}</FormHelperText>
+						) : null}
+					</FormControl>
 				</Grid>
 				<Grid item md={4}>
+				<FormControl error={durationError} className={inputClasses.root}>
+				{custDuration 
+					?
 					<TextField
-						label={"Duracion"}
+						label={"Duración (minutos)"}
+						helper={"Duración de tarea requerida"}
+						id={"nueva-tarea-duracion"}
+						name="duration"
+						type="number"
+						value={duration}
+						onChange={(e)=>setDuration(e.target.value)}
+						error={durationError}
+						required={true}
+						InputLabelProps={{
+							shrink: true,
+						}}
+						InputProps={{
+							inputProps: { 
+								max: 120, min: 1 
+							}
+						}}
+					>
+					</TextField>
+					: 
+					<TextField
+						label={"Duración"}
 						helper={"Duración de tarea requerida"}
 						id={"nueva-tarea-duracion"}
 						name="duration"
 						select
 						selectOptions={Duraciones}
-						value={inputs.duration ? inputs.duration : ""}
-						onChange={handleInputChange}
-						error={false}
+						value={duration}
+						onChange={(e)=>setDuration(e.target.value)}
+						error={durationError}
 						required={true}
-					/>
+						InputLabelProps={{
+							shrink: true,
+						}}
+					>
+						{Duraciones.map(option => (
+						 <MenuItem key={option.value} value={option.value}>
+                         	{option.label}
+						</MenuItem>
+						 ))}
+					</TextField> 
+					
+				}
+				</FormControl>
+				
 				</Grid>
 				<Grid item md={2}>
 					<Button
