@@ -1,57 +1,24 @@
 import React, {useState, useEffect} from 'react';
 import AddTaskBar from './Toolbar';
-import TasksDragDrop from './DragDropTasks';
+import TasksDragDrop from './TasksDragDrop';
 import Graphs from './Graphs';
 import Grid from "@material-ui/core/Grid";
-import {v4} from "uuid"
-
-const item1 = {
-    id: v4(),
-    description: "lavar trastes",
-    duration: 30,
-    time: 15.2
-}
-
-const item2 = {
-    id: v4(),
-    description: "salir a correr",
-    duration: 45,
-    time: 20
-}
-
-const item3 = {
-    id: v4(),
-    description: "yoga",
-    duration: 15,
-    time: 10
-}
+import TaskTrackerContext from '../../store/createContext';
 
 
 export default function () {
 
-    const [tasks, setTasks] = useState() 
+    const { tasks } = React.useContext(TaskTrackerContext);
     const [showGraphs, setShowGraphs] = useState(true)
 
-    useEffect(() => {
-        setTasks({
-            "todos": {
-                title: "Por Hacer",
-                items: [item1, item2]
-            },
-            "completed": {
-                title: "Completadas",
-                items: [item3]
-            }
-        })
-    }, [])
 
     return (
         <Grid container spacing={2} style={{padding:'3% 5%'}}>
             <Grid item xs={12}>
-                <AddTaskBar setTasks={setTasks}/>
+                <AddTaskBar/>
             </Grid>
             <Grid item md={showGraphs ? 8 : 12} xs={12}>
-         {tasks &&  <TasksDragDrop tasks={tasks} setTasks={setTasks}/> }
+         {tasks &&  <TasksDragDrop tasks={tasks}/> }
             </Grid>
             {showGraphs && <Grid item md={4} xs={12}>
                 <Graphs/>

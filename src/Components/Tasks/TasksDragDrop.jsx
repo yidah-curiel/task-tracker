@@ -5,6 +5,7 @@ import Paper from "@material-ui/core/Paper";
 import { DragDropContext } from "react-beautiful-dnd";
 import _ from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
+import TaskTrackerContext from '../../store/createContext';
 import clsx from 'clsx';
 
 
@@ -39,14 +40,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function Tasks({tasks, setTasks}) {
+function Tasks() {
+
     const classes = useStyles();
-    const [showCompleted, setShowCompleted] = useState(true)
+    
+    const { tasks, moveTask, showCompleted, setShowCompleted } = React.useContext(TaskTrackerContext);
 
     const handleTasksView = () => {
         setShowCompleted(prev => !prev)
     }
 
+
+    // valida el drag and drop mueve el task de su origen a su destino 
     const onDragEnd = ({destination, source}) => {
         console.log("from", source)
         console.log("to", destination)
@@ -58,19 +63,9 @@ function Tasks({tasks, setTasks}) {
             console.log('dropped in same place')
         }
         // copiamos la tarea que estamos moviendo (usando su ubicacion de origen)
-        const taskCopy = {...tasks[source.droppableId].items[source.index]} 
-        setTasks(prev => {
-            // copiamos el estado anterior de tareas
-            const prevTasks = {...prev}
-            // borramos la tarea que estamos moviendo de su lugar de origen
-            prevTasks[source.droppableId].items.splice(source.index, 1)
-            // insertamos la tarea que estamos moviendo en su lugar de destino
-            prevTasks[destination.droppableId].items.splice(destination.index, 0, taskCopy)            
-            // seteamos estas nuevas listas de tareas
-            return prevTasks
-        })
-
+       moveTask(source, destination)
     }
+
 
     return (
         <Paper variant="outlined" className={classes.root}>

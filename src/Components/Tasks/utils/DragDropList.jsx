@@ -57,6 +57,7 @@ function DraggableList({name, items, listKey, showCompleted}) {
                                                 listKey = {listKey}
                                                 showCompleted={showCompleted}
                                                 task={el}
+                                                index={index}
                                                 />
                                         
                                 </ListItem>

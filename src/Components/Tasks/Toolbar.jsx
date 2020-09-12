@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import TaskTrackerContext from '../../store/createContext';
 import { v4 } from "uuid";
 //import TextField from "./utils/ui/TextField";
 import FormControl from "@material-ui/core/FormControl";
@@ -47,9 +48,11 @@ const Duraciones = [
 	{ value: 'other', label: "Otra"}
 ];
 
-function Toolbar({ setTasks }) {
+function Toolbar() {
 	const classes = useStyles();
 	const inputClasses = inputStyles()
+
+	const { addTask } = React.useContext(TaskTrackerContext);
 
 	const [description, setDescription] = useState('')
 	const [duration, setDuration] = useState('')
@@ -59,11 +62,7 @@ function Toolbar({ setTasks }) {
 
 	const handleSubmit = () => {
 		if (duration && description.length) {
-			if(descriptionError || durationError) {
-				setDescriptionError(false)
-				setDurationError(false)
-			}
-			addTask()
+			submitTask()
 		} else {
 			if (!description.length)  {
 				setDescriptionError(true)
@@ -74,20 +73,23 @@ function Toolbar({ setTasks }) {
 		}		
 	}
 
-	const addTask = (inputs) => {
+	const submitTask = () => {
+		if(descriptionError || durationError) {
+			setDescriptionError(false)
+			setDurationError(false)
+		}
 		const newTask = {
 			id: v4(),
 			description,
-			duration
+			duration,
+			countdown: duration,
+			time: 0
 		};
-		setTasks((prev) => { // agregamos la task al principio de la lista de tareas pendientes
-			const prevTasks = { ...prev };
-			prevTasks["todos"].items.unshift(newTask);
-			return prevTasks;
-		});
+		console.log(newTask)
+		addTask(newTask)
 		setDescription('')
 		setDuration('')
-	};
+	}
 
 	useEffect(() => {
 		console.log(duration)
@@ -97,7 +99,7 @@ function Toolbar({ setTasks }) {
 		}
 	}, [duration])
 
-	
+
 	return (
 		<Paper square className={classes.root}>
 			<Grid container spacing={3}>
@@ -127,7 +129,6 @@ function Toolbar({ setTasks }) {
 					?
 					<TextField
 						label={"Duración (minutos)"}
-						helper={"Duración de tarea requerida"}
 						id={"nueva-tarea-duracion"}
 						name="duration"
 						type="number"
@@ -148,7 +149,6 @@ function Toolbar({ setTasks }) {
 					: 
 					<TextField
 						label={"Duración"}
-						helper={"Duración de tarea requerida"}
 						id={"nueva-tarea-duracion"}
 						name="duration"
 						select
@@ -169,6 +169,9 @@ function Toolbar({ setTasks }) {
 					</TextField> 
 					
 				}
+				{durationError ? (
+							<FormHelperText id={"error-en-nueva-tarea-duracion"}>{"Duración de tarea requerida"}</FormHelperText>
+						) : null}
 				</FormControl>
 				
 				</Grid>
