@@ -51,7 +51,10 @@ function DraggableList({name, items, listKey, showCompleted}) {
                                         listKey === "completed" ? 
                                         clsx(classes.listItem, classes.completedItem)
                                         : classes.listItem}>
-                                            <TaskItem showCompleted={showCompleted}/>
+                                            <TaskItem 
+                                                listKey = {listKey}
+                                                showCompleted={showCompleted}
+                                                />
                                         
                                 </ListItem>
                             )}

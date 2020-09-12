@@ -16,10 +16,9 @@ const useStyles = makeStyles((theme) => ({
 		padding: theme.spacing(1),
 		"& > *": {
 			margin: theme.spacing(1),
+			width: '100%',
+			alignItems: "center"
 		},
-	},
-	container: {
-		alignItems: "center",
 	},
 	button: {
 	//	width: "100%",
@@ -51,7 +50,7 @@ function Toolbar({ setTasks }) {
 
 	return (
 		<Paper square className={classes.root}>
-			<Grid container spacing={3} className={classes.container}>
+			<Grid container spacing={3}>
 				<Grid item md={6}>
 					<TextField
 						label={"Nueva Tarea"}

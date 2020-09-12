@@ -11,6 +11,7 @@ import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import DoneIcon from "@material-ui/icons/Done";
 import RestoreIcon from "@material-ui/icons/Restore";
 import TimerIcon from "@material-ui/icons/Timer";
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import clsx from 'clsx';
 
 //import PauseIcon from "@material-ui/icons/Pause";
@@ -35,6 +36,13 @@ const useStyles = makeStyles((theme) => ({
     color: "rgba(0, 0, 0, 0.54)",
     padding: "0px 5px"
   },
+  countdown: {
+    textAlign: 'center',
+    marginLeft: '-8%',
+    [theme.breakpoints.up('md')]: { 
+      marginLeft: '-9%',
+    }
+  },
   buttons: {
     display: 'flex',
     justifyContent: 'center'
@@ -44,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function TaskListItem({showCompleted}) {
+export default function TaskListItem({showCompleted, listKey}) {
   const classes = useStyles();
 
   return (
@@ -52,14 +60,31 @@ export default function TaskListItem({showCompleted}) {
           <Grid item xs={8} sm={showCompleted ? 8 : 6} xl={8} className={classes.col}>
             <ListItemText
               primary="Descripcion de tarea"
-              secondary={showCompleted ? "30 min" : "Duración: 30 min"}
+              secondary="Duración: 30 min"
             />
           </Grid>
           <Grid item xs={4} sm={showCompleted ? 4 : 2} xl={1} className={classes.col}>
-            <TimerIcon className={classes.timer} />
-            <ListItemText primary="20 min" />
+            { listKey === "completed" ?
+              <>
+                <AccessTimeIcon className={classes.timer} />
+                <ListItemText primary="20 min" />
+              </>
+              :
+              <>
+                <TimerIcon className={classes.timer} />
+                <ListItemText 
+                  primary= {
+                    <div className={classes.countdown}>
+                      - 30m 00s
+                    </div>
+                  }
+                />
+              </>
+            }
           </Grid>
-          <Grid item xs={12} sm={showCompleted ? 12 : 4} xl={3} className={showCompleted ? clsx(classes.buttons, classes.topMargin) : classes.buttons}>
+        { listKey === "completed" ?
+          null :
+          <Grid item xs={12} sm={showCompleted ? 12 : 4} xl={3} className={clsx(classes.buttons, classes.topMargin)}>
             <IconButton edge="end" aria-label="editar">
                 <EditIcon />
             </IconButton>
@@ -77,6 +102,7 @@ export default function TaskListItem({showCompleted}) {
               <DeleteIcon />
             </IconButton>
           </Grid>
+        }
         </Grid>
   );
 }
