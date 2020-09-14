@@ -6,6 +6,7 @@ import { DragDropContext } from "react-beautiful-dnd";
 import _ from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
 import {TaskTrackerContext} from '../../../store/TaskTrackerStore';
+import Button from "@material-ui/core/Button";
 import clsx from 'clsx';
 
 
@@ -19,7 +20,10 @@ const useStyles = makeStyles((theme) => ({
 		},
     },
     headerContainer: {
-        paddingLeft: '2%'
+        paddingLeft: '2%',
+        display: 'flex',
+        padding: '0% 2%',
+        alignItems: 'center'
     },
     listContainer: {
         backgroundColor: '#e0e0e0',
@@ -72,14 +76,22 @@ function Tasks() {
             <Grid container>
                  {/* El contexto donde se podra hacer el DragDrop */}
                 <DragDropContext onDragEnd={onDragEnd}>
-                    <Grid item xs={12} className={classes.headerContainer}>    
-                        <h3>Tareas</h3>
-                        <button onClick={handleTasksView}>
-                            {!showCompleted ? 
-                                "ver tareas realizadas"
-                                : 
-                                "cerrar tareas realizadas"}
-                        </button>
+                    <Grid item container xs={12} className={classes.headerContainer}>    
+                        <Grid item xs={6}>
+                            <h3>Tareas</h3>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Button 
+                                onClick={handleTasksView}
+                                edge="end"
+                                aria-label="editar"
+                            >
+                                {!showCompleted ? 
+                                    "ver tareas realizadas"
+                                    : 
+                                    "cerrar tareas realizadas"}
+                            </Button>
+                        </Grid>
                     </Grid>
                      {/* El container de la lista tareas por hacer 
                      estilos diferentes cuando mostramos la lista de tareas terminadas y cuando no*/}

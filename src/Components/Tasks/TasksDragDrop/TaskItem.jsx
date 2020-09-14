@@ -11,9 +11,10 @@ import RestoreIcon from "@material-ui/icons/Restore";
 import TimerIcon from "@material-ui/icons/Timer";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import PauseIcon from "@material-ui/icons/Pause";
+import SaveIcon from '@material-ui/icons/Save';
 import Timer from "./utils/Timer";
 import EditItem from "./utils/EditItem";
-import { TaskTrackerContext } from "../../../../store/TaskTrackerStore";
+import { TaskTrackerContext } from "../../../store/TaskTrackerStore";
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
@@ -48,9 +49,6 @@ const useStyles = makeStyles((theme) => ({
 export default function TaskListItem({ listKey, task, index }) {
 	const classes = useStyles();
 
-	// editItems controls whether or not this item is currently being edited
-	const [editItem, setEdit] = useState(false);
-
 	const {
 		showCompleted,
 		taskInProgress,
@@ -59,24 +57,30 @@ export default function TaskListItem({ listKey, task, index }) {
 		pauseTask,
 		resetTask,
 		finalizeTask,
-		setTimerMinutes,
-		setTimerSeconds,
+		editTask,
 		taskCompleted,
 	} = useContext(TaskTrackerContext);
 
+	// editItems controls whether or not this item is currently being edited
+	const [editItem, setEdit] = useState(false);
+	// input values to use in EditItem
+	const [inputDescription, setInputDescription] = useState('')
+	const [inputDuration, setInputDuration] = useState('')
 
-	useEffect(() => {
-		if (index === 0 && taskInProgress && listKey === "todos") {
-			setTimerMinutes(task.duration);
-			setTimerSeconds(0);
-		}
-	}, [task.countdown]);
+	// saves the changes in EditItem and removes the edit view
+	const onSaveClick = () => {
+		editTask(listKey, index, {description:inputDescription, duration:inputDuration})
+		setEdit(false)
+	}
 
-	const onPause = () => {
-		pauseTask();
-	};
-	// this effect will run every time seconds or minutes change,
-	// and will wait (timeout) 1000 ms (1sec) to update the seconds and minutes again
+	/* sets the input values to the current item value and shows the EditItem view 
+	so we can edit these values */ 
+	const onEditClick = () => {
+		setInputDescription(task.description)
+		setInputDuration(task.duration)
+		setEdit(true)
+	}
+
 
 	// formats obj mins and secs for view
 	const showTime = (obj) => {
@@ -101,10 +105,10 @@ export default function TaskListItem({ listKey, task, index }) {
 
 				{editItem ? 
 						<EditItem
-							key={listKey}
-							index={index}
-							description={task.description}
-							duration={task.duration}
+							inputDescription={inputDescription}
+							setInputDescription={setInputDescription}
+							inputDuration={inputDuration}
+							setInputDuration={setInputDuration}
 						/>
 						:
 						<ListItemText
@@ -180,14 +184,15 @@ export default function TaskListItem({ listKey, task, index }) {
 					else we show the edit option */}
 					{editItem ? (
 						<IconButton
+							onClick={onSaveClick}
 							edge="end"
 							aria-label="guardar"
 						>
-							<EditIcon />
+							<SaveIcon />
 						</IconButton>
 					) : (
 						<IconButton
-							onClick={() => setEdit(true)}
+							onClick={onEditClick}
 							edge="end"
 							aria-label="editar"
 						>
@@ -199,7 +204,7 @@ export default function TaskListItem({ listKey, task, index }) {
 					else we show the play button to start this task */}
 					{taskInProgress && index === 0 ? (
 						<IconButton 
-							onClick={onPause} 
+							onClick={pauseTask} 
 							edge="end" 
 							aria-label="pausar"
 						>

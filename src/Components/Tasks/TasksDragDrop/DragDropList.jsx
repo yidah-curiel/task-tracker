@@ -4,7 +4,7 @@ import List from '@material-ui/core/List';
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { TaskTrackerContext } from "../../../store/TaskTrackerStore";
 import ListItem from '@material-ui/core/ListItem';
-import TaskItem from './TaskItem/TaskItem';
+import TaskItem from './TaskItem';
 import clsx from 'clsx';
 
 const useStyles = makeStyles({

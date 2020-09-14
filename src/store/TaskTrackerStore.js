@@ -34,7 +34,7 @@ const item3 = {
 	description: "yoga",
 	duration: 15,
 	countdown: {
-		mins: 15,
+		mins: 0,
 		secs: 0,
 	},
 	time: {
@@ -159,17 +159,38 @@ const TaskTrackerProvider = ({ children }) => {
 	const resetTask = (index) => {
 		const newItem = { ...tasks["todos"].items[index] };
 		newItem.countdown = {mins: newItem.duration, secs: 0}
+		
 		setTasks((prev) => {
 			const prevTasks = { ...prev };
 			prevTasks["todos"].items[index] = newItem;
 			return prevTasks;
 		});
+
+		// si la tarea que estamos reseteando esta en curso, reseteamos el temporizador
+		if (index === 0 && taskInProgress) {
+			setTimerMinutes(newItem.duration);
+			setTimerSeconds(0);
+		}
 	};
 
 	// editamos tarea en 'todos' con los nuevos props
-	// tambien cambiamos la tarea en 'all', para mantener el historial intacto
 	const editTask = (key, index, props) => {
 		const newItem = { ...tasks[key].items[index], ...props };
+		
+		/* si la nueva duracion es mayor a la anterior,
+		reseteamos el countdown para tomar en cuenta la nueva duracion */
+		if (newItem.duration > tasks[key].items[index].duration) {
+			// le agregamos al countdown la diferencia entre la duracion anterior y la nueva
+			newItem.countdown.mins = parseInt(newItem.countdown.mins) + 
+									 (newItem.duration - tasks[key].items[index].duration) 
+		}
+
+		/* si la nueva duracion es menor a la anterior,
+		reseteamos el countdown para ser igual a la nueva duracion */
+		if (newItem.duration < tasks[key].items[index].duration) {
+			newItem.countdown = {mins:newItem.duration, secs:0}
+		}
+
 		console.log(newItem);
 		setTasks((prev) => {
 			const prevTasks = { ...prev };
@@ -190,8 +211,6 @@ const TaskTrackerProvider = ({ children }) => {
 			setTaskInProgress(false);
 		}
 
-		console.log(taskCopy)
-		console.log(tasks)
 		// mandamos la tarea de 'todos' a 'complete'
 
 		// copiamos el estado anterior de tareas
@@ -201,8 +220,6 @@ const TaskTrackerProvider = ({ children }) => {
 		// insertamos la tarea al final de la lista completed
 		newTasks["completed"].items.unshift(taskCopy);
 		// seteamos estas nuevas listas de tareas
-		console.log(newTasks)
-
 		setTasks(newTasks);
 		
 		setShowCompleted(true);
@@ -221,12 +238,11 @@ const TaskTrackerProvider = ({ children }) => {
 		if (index !== 0) {
 			// copiamos, quitamos y metemos la tarea en cuestion 
 			const taskCopy = { ...tasks["todos"].items[index] };
-			setTasks((prev) => {
-				const prevTasks = { ...prev };
-				prevTasks["todos"].items.splice(index, 1);
-				prevTasks["todos"].items.unshift(taskCopy);
-				return prevTasks;
-			});
+
+			const newTasks = { ...tasks };
+				newTasks["todos"].items.splice(index, 1);
+				newTasks["todos"].items.unshift(taskCopy);
+			setTasks(newTasks);
 		}
 		// seteamos el temporizador al countdown del primer item en todos
 		// tasks['todos'].items[0] siempre debe ser la tarea en curso
@@ -254,7 +270,6 @@ const TaskTrackerProvider = ({ children }) => {
 	};
 
 	const pauseTask = () => {
-		setCountdown()
 		setTaskInProgress(false);
 	};
 

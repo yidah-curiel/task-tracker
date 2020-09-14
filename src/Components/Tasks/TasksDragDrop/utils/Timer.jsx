@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import { TaskTrackerContext } from "../../../store/TaskTrackerStore";
+import { TaskTrackerContext } from "../../../../store/TaskTrackerStore";
 
 
 const Timer = ({onComplete}) => {
@@ -13,9 +13,10 @@ const Timer = ({onComplete}) => {
     } = useContext(TaskTrackerContext);
 
     // handles the change in timer per second
-    /* every time timerMinutes and timerSeconds change, waits 1000ms and lowers timer
-    until it reaches 0 or closes, where it stops the countdown and saves the 
-    countdown time to the task in progress (if it reaches 0 it also completes the task in progress)*/
+   /* this effect will run every time seconds or minutes change,
+    and will wait (timeout) 1000 ms (1sec) to update the seconds and minutes again 
+    until it reaches 0, where it stops the countdown, saves the countdown time to the
+    task in progress and completes the task*/
     useEffect(() => {
       const timeout  = setTimeout(() => {
         if (timerSeconds > 0) {
@@ -36,11 +37,9 @@ const Timer = ({onComplete}) => {
         }
       }, 1000);
     
-      return () => { 
-        /* when this component closes, this return function
-        stops timer and sets countdown in task in progress*/
-        clearTimeout(timeout) 
+      return () => {
         setCountdown()
+        clearTimeout(timeout) 
       }
         
       }, [timerMinutes, timerSeconds]);
