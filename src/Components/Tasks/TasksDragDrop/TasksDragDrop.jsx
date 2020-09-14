@@ -7,6 +7,8 @@ import _ from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
 import {TaskTrackerContext} from '../../../store/TaskTrackerStore';
 import Button from "@material-ui/core/Button";
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import clsx from 'clsx';
 
 
@@ -80,16 +82,15 @@ function Tasks() {
                         <Grid item xs={6}>
                             <h3>Tareas</h3>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={6} style={{textAlign: 'end'}}> 
                             <Button 
                                 onClick={handleTasksView}
-                                edge="end"
-                                aria-label="editar"
+                                endIcon={showCompleted ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
                             >
-                                {!showCompleted ? 
-                                    "ver tareas realizadas"
+                                {showCompleted ? 
+                                    "cerrar tareas realizadas"
                                     : 
-                                    "cerrar tareas realizadas"}
+                                    "ver tareas realizadas"}
                             </Button>
                         </Grid>
                     </Grid>
