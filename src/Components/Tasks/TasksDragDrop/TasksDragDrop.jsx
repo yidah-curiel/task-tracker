@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import DragDropList from './DragDropList'
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
@@ -8,6 +8,7 @@ import {TaskTrackerContext} from '../../../store/TaskTrackerStore';
 import Button from "@material-ui/core/Button";
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Filters from './utils/Filters';
 import clsx from 'clsx';
 
 
@@ -51,10 +52,38 @@ function Tasks() {
     
     const { tasks, dropTask, showCompleted, setShowCompleted } = useContext(TaskTrackerContext);
 
+    const [todoList, setTodoList] = useState([])
+    const [completedList, setCompletedList] = useState([])
+
     const handleTasksView = () => {
         setShowCompleted(prev => !prev)
     }
 
+    useEffect(() => {
+        setTodoList(tasks.todos.items)
+        setCompletedList(tasks.completed.items)
+    }, [])
+
+    const handleDuracionFilter = (duracion) => {
+        let newTodos;
+        let newCompleted;
+        if (duracion === 30) {
+            newTodos = tasks.todos.items.filter(item => item.duration <= 30)
+            newCompleted = tasks.completed.items.filter(item => item.duration <= 30)
+            setTodoList(newTodos)
+            setCompletedList(newCompleted)
+        } else if (duracion === 45) {
+            newTodos = tasks.todos.items.filter(item => item.duration > 30 && item.duration <= 59)
+            newCompleted = tasks.completed.items.filter(item => item.duration > 30 && item.duration <= 59)
+            setTodoList(newTodos)
+            setCompletedList(newCompleted)
+        } else {
+            newTodos = tasks.todos.items.filter(item => item.duration >= 60)
+            newCompleted = tasks.completed.items.filter(item => item.duration >= 60)
+            setTodoList(newTodos)
+            setCompletedList(newCompleted)
+        }
+    }
 
     // valida el drag and drop mueve el task de su origen a su destino 
     const onDragEnd = ({destination, source}) => {
@@ -91,6 +120,13 @@ function Tasks() {
                                     "mostrar tareas realizadas"}
                             </Button>
                         </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Filters 
+                                setTodoList={setTodoList}
+                                setCompletedList={setCompletedList}
+                                handleDuracion={handleDuracionFilter}
+                            />
+                        </Grid>
                     </Grid>
                      {/* El container de la lista tareas por hacer 
                      estilos diferentes cuando mostramos la lista de tareas terminadas y cuando no*/}
@@ -109,7 +145,7 @@ function Tasks() {
                                 <DragDropList 
                                 showCompleted={showCompleted}
                                 name={"Por Hacer"}
-                                items={tasks.todos.items}
+                                items={todoList}
                                 listKey={"todos"}
                                 key={"todos"}
                                 />
@@ -121,7 +157,7 @@ function Tasks() {
                                 <DragDropList 
                                 showCompleted={true}
                                 name={"Completadas"}
-                                items={tasks.completed.items}
+                                items={completedList}
                                 listKey={"completed"}
                                 key={"completed"}
                                 />
