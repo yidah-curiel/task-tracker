@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import List from '@material-ui/core/List';
 import { Droppable, Draggable } from "react-beautiful-dnd";
+import { TaskTrackerContext } from "../../../store/TaskTrackerStore";
 import ListItem from '@material-ui/core/ListItem';
-import TaskItem from './TaskItem';
+import TaskItem from './TaskItem/TaskItem';
 import clsx from 'clsx';
 
 const useStyles = makeStyles({
@@ -13,19 +14,37 @@ const useStyles = makeStyles({
         borderRadius: 7
     },
     inProgressItem: {
-        backgroundColor: '#ffc400',
+        backgroundColor: '#daa520',
     },
     completedItem: {
+       // backgroundColor: '#d32f2f',
+
+    },
+    completeItem: {
         backgroundColor: '#bdbdbd',
     }
 });
 
-function DraggableList({name, items, listKey, showCompleted}) {
+function DraggableList({name, items, listKey}) {
     const classes = useStyles();
 
-    console.log(items)
-    console.log(listKey)
+    const {
+        taskInProgress,
+        taskCompleted,
+      } = useContext(TaskTrackerContext);
 
+    const listItemClasses = (index) => {        
+        if (listKey === "todos") { 
+            if (index === 0 && taskInProgress){
+                return clsx(classes.listItem, classes.inProgressItem)
+            } else {
+                return classes.listItem
+            }
+        } else {
+                return clsx(classes.listItem, classes.completeItem)
+            }
+    }
+    
     // Droppables son las zonas donde se podran dejar (hacer drop) los Draggables (listItems) */
     // droppableId para saber a cuall Droppable nos referimos (en este caso son "completed" y "todos") siempre deben ser strings
     return (  
@@ -48,14 +67,10 @@ function DraggableList({name, items, listKey, showCompleted}) {
                                     {...provided.draggableProps} 
                                      // dragHandleProps asignan la seccion del elemento por el que se puede recoger (todo el elemento ListItem se puede usar en este caso)
                                     {...provided.dragHandleProps} 
-                                    className={
-                                        listKey === "completed" ? 
-                                        clsx(classes.listItem, classes.completedItem)
-                                        : classes.listItem}>
+                                    className={listItemClasses(index)}>
 
                                             <TaskItem 
-                                                listKey = {listKey}
-                                                showCompleted={showCompleted}
+                                                listKey={listKey}
                                                 task={el}
                                                 index={index}
                                                 />

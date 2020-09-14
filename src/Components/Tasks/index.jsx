@@ -1,16 +1,14 @@
-import React, {useState, useEffect} from 'react';
+import React, {useContext} from 'react';
 import AddTaskBar from './Toolbar';
-import TasksDragDrop from './TasksDragDrop';
+import TasksDragDrop from './TasksDragDrop/TasksDragDrop';
 import Graphs from './Graphs';
 import Grid from "@material-ui/core/Grid";
-import TaskTrackerContext from '../../store/createContext';
+import {TaskTrackerContext} from '../../store/TaskTrackerStore';
 
 
 export default function () {
 
-    const { tasks } = React.useContext(TaskTrackerContext);
-    const [showGraphs, setShowGraphs] = useState(true)
-
+    const { tasks, showGraphs, setShowGraphs } = useContext(TaskTrackerContext);
 
     return (
         <Grid container spacing={2} style={{padding:'3% 5%'}}>

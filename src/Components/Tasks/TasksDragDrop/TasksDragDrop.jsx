@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
-import DragDropList from './utils/DragDropList'
+import React, {useState, useContext} from 'react';
+import DragDropList from './DragDropList'
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import { DragDropContext } from "react-beautiful-dnd";
 import _ from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
-import TaskTrackerContext from '../../store/createContext';
+import {TaskTrackerContext} from '../../../store/TaskTrackerStore';
 import clsx from 'clsx';
 
 
@@ -44,7 +44,7 @@ function Tasks() {
 
     const classes = useStyles();
     
-    const { tasks, moveTask, showCompleted, setShowCompleted } = React.useContext(TaskTrackerContext);
+    const { tasks, dropTask, showCompleted, setShowCompleted } = useContext(TaskTrackerContext);
 
     const handleTasksView = () => {
         setShowCompleted(prev => !prev)
@@ -63,7 +63,7 @@ function Tasks() {
             console.log('dropped in same place')
         }
         // copiamos la tarea que estamos moviendo (usando su ubicacion de origen)
-       moveTask(source, destination)
+        dropTask(source, destination)
     }
 
 
