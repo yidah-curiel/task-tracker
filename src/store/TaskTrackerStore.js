@@ -13,6 +13,7 @@ const item1 = {
 		mins: 0,
 		secs: 0,
 	},
+	completed: null // fecha en la que se termino la tarea
 };
 
 const item2 = {
@@ -27,6 +28,7 @@ const item2 = {
 		mins: 0,
 		secs: 0,
 	},
+	completed: null
 };
 
 const item3 = {
@@ -41,6 +43,22 @@ const item3 = {
 		mins: 10,
 		secs: 0,
 	},
+	completed: new Date()
+};
+
+const item4 = {
+	id: v4(),
+	description: "leer",
+	duration: 15,
+	countdown: {
+		mins: 0,
+		secs: 0,
+	},
+	time: {
+		mins: 10,
+		secs: 0,
+	},
+	completed: new Date()
 };
 
 export const TaskTrackerContext = createContext();
@@ -53,7 +71,7 @@ const TaskTrackerProvider = ({ children }) => {
 		},
 		completed: {
 			title: "Completadas",
-			items: [item3],
+			items: [item3, item4],
 		},
 	});
 
@@ -83,8 +101,8 @@ const TaskTrackerProvider = ({ children }) => {
 	};
 
 	const dropTask = (source, destination) => {
-		// si estamos moviendo una tarea a todo desde completed, creamos una nueva tarea
-		// igual a esta con nuevo id (y time en 0s) para ingresarla en todos y mantener la original en 'completed'
+		// si estamos reiniciando una tarea ( moviendola a 'todo' desde 'completed') 
+		// clonamos la tarea con nuevo id (y time en 0s) para ingresarla en todos y mantener la original en 'completed'
 		if (
 			source.droppableId === "completed" &&
 			destination.droppableId === "todos"
@@ -117,17 +135,16 @@ const TaskTrackerProvider = ({ children }) => {
 		}
 		 else {
 			const taskCopy = { ...tasks[source.droppableId].items[source.index] };
-			
+			// si estamos finalizando una tarea (moviendola de todos a completed)
+			// corremos la funcion que registra el tiempo final de la tarea
 			if (
 				source.droppableId === "todos" &&
 				destination.droppableId === "completed"
 				){	
-				// si estamos finalizando una tarea (moviendola de todos a completed)
-				// debemos primero setear el tiempo que se tomo en finalizar dicha tarea
-					setTimeComplete(taskCopy)
+					setFinalTime(taskCopy)
 			}
 
-			const newIndex = destination.index;
+			let newIndex = destination.index;
 			// si tenemos una tarea en proceso, solo se puede ingresar el 'todo' a partir del indice 1
 			if (
 				taskInProgress &&
@@ -207,7 +224,7 @@ const TaskTrackerProvider = ({ children }) => {
 		const taskCopy = { ...tasks['todos'].items[index] };
 
 		// registramos el tiempo que se tomó en terminar esta tarea
-		setTimeComplete(taskCopy)
+		setFinalTime(taskCopy)
 
 		// si la tarea que estamos finalizando es la que estaba en curso, se corta el progresso
 		if (index === 0 && taskInProgress) {
@@ -238,9 +255,10 @@ const TaskTrackerProvider = ({ children }) => {
 		}
 		// si no es la primer tarea de la lista todos, la metemos al prinicipio de la lista todos
 		// copiamos, quitamos y metemos la tarea en cuestion
+		const taskCopy = { ...tasks["todos"].items[index] };
 		if (index !== 0) {
 			// copiamos, quitamos y metemos la tarea en cuestion 
-			const taskCopy = { ...tasks["todos"].items[index] };
+			
 
 			const newTasks = { ...tasks };
 				newTasks["todos"].items.splice(index, 1);
@@ -249,8 +267,8 @@ const TaskTrackerProvider = ({ children }) => {
 		}
 		// seteamos el temporizador al countdown del primer item en todos
 		// tasks['todos'].items[0] siempre debe ser la tarea en curso
-		setTimerMinutes(tasks['todos'].items[0].countdown.mins)
-		setTimerSeconds(tasks['todos'].items[0].countdown.secs)
+		setTimerMinutes(taskCopy.countdown.mins)
+		setTimerSeconds(taskCopy.countdown.secs)
 
 		setTaskInProgress(true);
 	};
@@ -278,17 +296,18 @@ const TaskTrackerProvider = ({ children }) => {
 
 	// funcion que calcula el tiempo que se tardo en finalizar una tarea
 	// restando el tiempo en el countdown de la task del tiempo en la duracion de la misma task
-	const setTimeComplete = (task) => {
+	const setFinalTime = (task) => {
+		// el parametro task debe ser copia del task obj, xq estamos afectando el obj directamente
 		let newMins = 0
 		let newSecs = 0
-		// estos seran los tiempos que se tomo en finalizar la tarea
+		// variables para calcular el tiempo que se tomó en terminar la tarea
 
 		if (task.countdown.secs === 0) {
 			// si los segundos en el countdown estan en 0s, solo restamos los minutos
 			newMins = task.duration - task.countdown.mins
 		} else {
-			
-			// si los minutos no estan en 0, tendremos que restar 1 minuto adicional, o dejar los minutos en 0
+			// si los minutos no estan en 0, restamos 1 minuto adicional, 
+			// o dejamos los minutos en 0
 			if (task.duration - task.countdown.mins > 2) {
 				newMins = task.duration - task.countdown.mins -1
 			}
@@ -300,6 +319,9 @@ const TaskTrackerProvider = ({ children }) => {
 		
 		// metemos esta resta como el nuevo 'time' de nuestra task
 		task.time = {mins: newMins, secs: newSecs}
+		// agregamos la fecha en la que se termino la tarea
+		task.completed = new Date()
+		console.log(task)
 	}
 
 	

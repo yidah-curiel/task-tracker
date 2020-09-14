@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
@@ -15,7 +15,6 @@ import SaveIcon from '@material-ui/icons/Save';
 import Timer from "./utils/Timer";
 import EditItem from "./utils/EditItem";
 import { TaskTrackerContext } from "../../../store/TaskTrackerStore";
-import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -89,6 +88,11 @@ export default function TaskListItem({ listKey, task, index }) {
 		}s`;
 	};
 
+	const showDateCompleted = (date) => {
+		const month = date.getMonth() < 9 ? `0${date.getMonth()+1}` : date.getMonth()+1
+		return `${date.getDate()}/${month}/${date.getFullYear()}`
+	}
+
 	return (
 		<Grid container className={classes.root}>
 			
@@ -136,6 +140,7 @@ export default function TaskListItem({ listKey, task, index }) {
 								index === 0 && taskCompleted ? classes.completedTime : null
 							}
 							primary={showTime(task.time)}
+							secondary={showDateCompleted(task.completed)}
 						/>
 					</>
 				) : (

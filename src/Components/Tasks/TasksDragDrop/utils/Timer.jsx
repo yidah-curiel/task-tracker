@@ -23,17 +23,17 @@ const Timer = ({onComplete}) => {
           setTimerSeconds((prevSec) => prevSec - 1);
         }
         if (timerSeconds === 0) {
-        // stop timer when we reach 0:00
-        if (timerMinutes === 0) {
-          // stops timer, sets countdown in task and completes the task
-          clearTimeout(timeout);
-          setCountdown()
-          onComplete()
-        // change minutes and seconds when a minute ends (3:00 => 2:59)
-        } else {
-          setTimerMinutes((prevMin) => prevMin - 1);
-          setTimerSeconds(59);            
-        }
+          // stop timer when we reach 0:00
+          if (timerMinutes === 0) {
+            // stops timer, sets countdown in task and completes the task
+            clearTimeout(timeout);
+            setCountdown()
+            onComplete()
+          // change minutes and seconds when a minute ends (3:00 => 2:59)
+          } else {
+            setTimerMinutes((prevMin) => prevMin - 1);
+            setTimerSeconds(59);            
+          }
         }
       }, 1000);
     

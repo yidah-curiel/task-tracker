@@ -29,8 +29,7 @@ function DraggableList({name, items, listKey}) {
     const classes = useStyles();
 
     const {
-        taskInProgress,
-        taskCompleted,
+        taskInProgress
       } = useContext(TaskTrackerContext);
 
     const listItemClasses = (index) => {        

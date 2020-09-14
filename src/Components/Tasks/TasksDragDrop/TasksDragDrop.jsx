@@ -1,9 +1,8 @@
-import React, {useState, useContext} from 'react';
+import React, {useContext} from 'react';
 import DragDropList from './DragDropList'
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import { DragDropContext } from "react-beautiful-dnd";
-import _ from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
 import {TaskTrackerContext} from '../../../store/TaskTrackerStore';
 import Button from "@material-ui/core/Button";
@@ -59,8 +58,7 @@ function Tasks() {
 
     // valida el drag and drop mueve el task de su origen a su destino 
     const onDragEnd = ({destination, source}) => {
-        console.log("from", source)
-        console.log("to", destination)
+
         // destination es null si el drop destino esta fuera de un droppable
         if(!destination) {
             return

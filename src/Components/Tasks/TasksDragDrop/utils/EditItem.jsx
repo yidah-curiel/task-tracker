@@ -1,9 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import {TaskTrackerContext} from '../../../../store/TaskTrackerStore';
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 
@@ -12,7 +9,6 @@ const inputStyles = makeStyles((theme) => ({
 	root: {
 		display: "flex",
 		flexWrap: "wrap",
-     //   padding: theme.spacing(1),
         width: "100%",
 		"& > *": {
 			margin: theme.spacing(1),
