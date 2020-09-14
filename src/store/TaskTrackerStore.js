@@ -6,8 +6,8 @@ const item1 = {
 	description: "lavar trastes", 
 	duration: 30, // duracion estimada de la tarea
 	countdown: { // tiempo en temporizador de esta tarea (tiempo restante en la tarea)
-		mins: 0,
-		secs: 3,
+		mins: 30,
+		secs: 0,
 	}, // tiempo que se tomo en finalizar la tarea
 	time: {
 		mins: 0,
@@ -20,7 +20,7 @@ const item2 = {
 	description: "salir a correr",
 	duration: 45,
 	countdown: {
-		mins: 40,
+		mins: 45,
 		secs: 3,
 	},
 	time: {
@@ -58,7 +58,6 @@ const TaskTrackerProvider = ({ children }) => {
 	});
 
 	// minutos y segundos que desplegaremos en temporizador 
-	// y usaremos para manejar el countdown de las tareas
 	const [timerMinutes, setTimerMinutes] = useState(0);
 	const [timerSeconds, setTimerSeconds] = useState(0);
 	
@@ -98,6 +97,10 @@ const TaskTrackerProvider = ({ children }) => {
 					secs: 0,
 				},
 			};
+
+			// reseteamos el countdown de la tarea
+			newTodo.countdown = {mins: newTodo.duration, secs:0}
+
 			let newIndex = destination.index;
 			// si tenemos una tarea en proceso, solo se puede ingresar el todo a partir del indice 1
 			if (taskInProgress && destination.index === 0) {

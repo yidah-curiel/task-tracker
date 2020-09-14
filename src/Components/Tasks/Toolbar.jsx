@@ -63,7 +63,7 @@ function Toolbar() {
 	// handles form validation
 	const handleSubmit = () => {
 		// if form is valid, adds new task
-		if (!duration && description.length) {
+		if (duration && description.length) {
 			submitTask()
 		} else {
 			// sets corresponding error messages for invalid fields
@@ -169,7 +169,6 @@ function Toolbar() {
 						id={"nueva-tarea-duracion"}
 						name="duration"
 						select
-						selectOptions={Duraciones}
 						value={duration}
 						onChange={(e)=>setDuration(e.target.value)}
 						error={durationError}
