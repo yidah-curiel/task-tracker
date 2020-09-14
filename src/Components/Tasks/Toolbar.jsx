@@ -100,6 +100,7 @@ function Toolbar() {
 		addTask(newTask)
 		setDescription('')
 		setDuration('')
+		setCustDuration(false)
 	}
 
 	// if 'other' duration is selected, show custDuration input
