@@ -54,36 +54,50 @@ function Tasks() {
 
     const [todoList, setTodoList] = useState([])
     const [completedList, setCompletedList] = useState([])
+    const [duracion, setDuracion] = useState('')
+
+
+    const handleDuracion = (dur) => {
+        setDuracion(dur)
+        if(dur !== "") {
+            filterDuracion(dur)         
+        }
+    }
 
     const handleTasksView = () => {
         setShowCompleted(prev => !prev)
     }
 
     useEffect(() => {
-        setTodoList(tasks.todos.items)
-        setCompletedList(tasks.completed.items)
-    }, [])
+        if (duracion === '') {
+            setTodoList(tasks.todos.items)
+            setCompletedList(tasks.completed.items)
+        } else {
+            filterDuracion()
+        }
+        
+    }, [tasks])
 
-    const handleDuracionFilter = (duracion) => {
+    const filterDuracion = dur => {
         let newTodos;
         let newCompleted;
-        if (duracion === 30) {
-            newTodos = tasks.todos.items.filter(item => item.duration <= 30)
-            newCompleted = tasks.completed.items.filter(item => item.duration <= 30)
-            setTodoList(newTodos)
-            setCompletedList(newCompleted)
-        } else if (duracion === 45) {
-            newTodos = tasks.todos.items.filter(item => item.duration > 30 && item.duration <= 59)
-            newCompleted = tasks.completed.items.filter(item => item.duration > 30 && item.duration <= 59)
-            setTodoList(newTodos)
-            setCompletedList(newCompleted)
-        } else {
-            newTodos = tasks.todos.items.filter(item => item.duration >= 60)
-            newCompleted = tasks.completed.items.filter(item => item.duration >= 60)
+
+        const filterLists = (min, max) => {
+            newTodos = tasks.todos.items.filter(item => item.duration >= min && item.duration <= max)
+            newCompleted = tasks.completed.items.filter(item => item.duration >= min && item.duration <= max)
             setTodoList(newTodos)
             setCompletedList(newCompleted)
         }
+
+        if (dur === 1) {
+           filterLists(1, 30)
+        } else if (dur === 2) {
+            filterLists(31, 59)
+        } else {
+            filterLists(60, 120)
+        }
     }
+
 
     // valida el drag and drop mueve el task de su origen a su destino 
     const onDragEnd = ({destination, source}) => {
@@ -124,7 +138,8 @@ function Tasks() {
                             <Filters 
                                 setTodoList={setTodoList}
                                 setCompletedList={setCompletedList}
-                                handleDuracion={handleDuracionFilter}
+                                handleDuracion={handleDuracion}
+                                duracion={duracion}
                             />
                         </Grid>
                     </Grid>

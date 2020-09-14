@@ -13,30 +13,20 @@ const useStyles = makeStyles({
 });
 
 const Duraciones = [
-	{ value: 30, label: "Corta (1-30 min)" },
-	{ value: 45, label: "Media (31-59 min)" },
-	{ value: 60, label: "Larga (1 hr+)" },
+	{ value: 1, label: "Corta (1-30 min)" },
+	{ value: 2, label: "Media (31-59 min)" },
+	{ value: 3, label: "Larga (1 hr+)" },
 ];
 
-function Filters({ handleDuracion }) {
+function Filters({ duracion, handleDuracion }) {
     const classes = useStyles();
-
-    const [duracion, setDuracion] = useState(null)
-
-
-    const toggleDuracion = (dur) => {
-        setDuracion(dur)
-        if(dur !== "") {
-            handleDuracion(dur)         
-        }
-    }
     
     return (
         <FormControl variant="filled" className={classes.root}>
         <InputLabel htmlFor="filtrar-duracion">Filtrar Duración</InputLabel>
         <Select
           value={duracion}
-          onChange={(e)=>toggleDuracion(e.target.value)}
+          onChange={(e)=>handleDuracion(e.target.value)}
           inputProps={{
             name: 'duracion',
             id: 'filtrar-duracion',
