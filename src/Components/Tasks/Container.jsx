@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import AddTaskBar from './Toolbar';
+import Toolbar from './Toolbar';
 import TasksDragDrop from './TasksDragDrop';
 import Graphs from './Graphs';
 import Grid from "@material-ui/core/Grid";
@@ -13,7 +13,7 @@ export default function () {
     return (
         <Grid container spacing={2} style={{padding:'3% 5%'}}>
             <Grid item xs={12}>
-                <AddTaskBar/>
+                <Toolbar/>
             </Grid>
             <Grid item xs={12}>
          {tasks &&  <TasksDragDrop tasks={tasks}/> }

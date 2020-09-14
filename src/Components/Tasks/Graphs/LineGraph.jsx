@@ -1,6 +1,6 @@
   import React from 'react';
   import {Line} from 'react-chartjs-2';
-  import { makeStyles, useTheme } from '@material-ui/core/styles';
+  import { makeStyles } from '@material-ui/core/styles';
   import CardContent from '@material-ui/core/CardContent';
 
   const useStyles = makeStyles((theme) => ({

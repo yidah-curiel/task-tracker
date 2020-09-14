@@ -92,12 +92,17 @@ const TaskTrackerProvider = ({ children }) => {
 	
 
 	const addTask = (newTask) => {
-		setTasks((prev) => {
-			// agregamos la task al final de la lista de tareas pendientes
-			const prevTasks = { ...prev };
-			prevTasks["todos"].items.push(newTask);
-			return prevTasks;
-		});
+		// agregamos la task al final de la lista de tareas pendientes
+		const newTasks = { ...tasks };
+		newTasks["todos"].items.push(newTask);
+		setTasks(newTasks);
+	};
+
+	const loadTasks = (tasksToLoad) => {
+		// para agregar una lista de tareas en completed
+		const newTasks = { ...tasks };
+		newTasks["completed"].items = newTasks["completed"].items.concat(tasksToLoad);
+		setTasks(newTasks);
 	};
 
 	const dropTask = (source, destination) => {
@@ -350,7 +355,8 @@ const TaskTrackerProvider = ({ children }) => {
 				pauseTask,
 				showGraphs,
 				setShowGraphs,
-				setCountdown
+				setCountdown,
+				loadTasks
 			}} //variables seteadas para usarse donde sea :v
 		>
 			{children}

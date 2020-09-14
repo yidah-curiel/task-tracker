@@ -88,7 +88,7 @@ function Tasks() {
                                 {showCompleted ? 
                                     "cerrar tareas realizadas"
                                     : 
-                                    "ver tareas realizadas"}
+                                    "mostrar tareas realizadas"}
                             </Button>
                         </Grid>
                     </Grid>

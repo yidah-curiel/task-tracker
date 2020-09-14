@@ -2,15 +2,16 @@ import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
+import AddIcon from '@material-ui/icons/Add';
 import Grid from "@material-ui/core/Grid";
-import {TaskTrackerContext} from '../../store/TaskTrackerStore';
+import {TaskTrackerContext} from '../../../store/TaskTrackerStore';
 import { v4 } from "uuid";
 //import TextField from "./utils/ui/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import MenuItem from '@material-ui/core/MenuItem';
-
+import LoadTasks from './LoadTasks'
 
 const inputStyles = makeStyles((theme) => ({
 	root: {
@@ -35,9 +36,10 @@ const useStyles = makeStyles((theme) => ({
 			alignItems: "center"
 		},
 	},
-	button: {
-	//	width: "100%",
-	},
+	buttons: {
+		display: 'flex',
+		flexDirection: 'column'
+	}
 }));
 
 const Duraciones = [
@@ -192,15 +194,16 @@ function Toolbar() {
 				</FormControl>
 				
 				</Grid>
-				<Grid item md={2}>
+				<Grid item md={2} className={classes.buttons}>
 					<Button
 						variant="contained"
 						color="primary"
-						className={classes.button}
 						onClick={handleSubmit}
+						startIcon={<AddIcon/>}
 					>
-						Agregar
+						Agregar Tarea
 					</Button>
+					<LoadTasks/>
 				</Grid>
 				
 			</Grid>

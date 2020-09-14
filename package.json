@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^7.1.2",
     "chart.js": "^2.9.3",
     "clsx": "^1.1.1",
+    "faker": "^5.1.0",
     "lodash": "^4.17.20",
     "react": "^16.13.1",
     "react-beautiful-dnd": "^13.0.0",
