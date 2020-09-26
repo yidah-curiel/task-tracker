@@ -124,11 +124,9 @@ const TaskTrackerProvider = ({ children }) => {
 			// reseteamos el countdown de la tarea
 			newTodo.countdown = {mins: newTodo.duration, secs:0}
 
-			let newIndex = destination.index;
+			let newIndex = taskInProgress && destination.index === 0 ? 1 : destination.index
 			// si tenemos una tarea en proceso, solo se puede ingresar el todo a partir del indice 1
-			if (taskInProgress && destination.index === 0) {
-				newIndex = 1;
-			}
+
 			setTasks((prev) => {
 				// copiamos el estado anterior de tareas
 				const prevTasks = { ...prev };
@@ -149,15 +147,13 @@ const TaskTrackerProvider = ({ children }) => {
 					setFinalTime(taskCopy)
 			}
 
-			let newIndex = destination.index;
+			let newIndex = taskInProgress &&
+							destination.droppableId === "todos" &&
+							destination.index === 0 ? 1 
+							: destination.index;
 			// si tenemos una tarea en proceso, solo se puede ingresar el 'todo' a partir del indice 1
-			if (
-				taskInProgress &&
-				destination.droppableId === "todos" &&
-				destination.index === 0
-			) {
-				newIndex = 1;
-			}
+		
+
 			setTasks((prev) => {
 				// copiamos el estado anterior de tareas
 				const prevTasks = { ...prev };
@@ -173,11 +169,14 @@ const TaskTrackerProvider = ({ children }) => {
 
 	// boramos el task de los 'todos', usando index como referencia a la tarea
 	const deleteTask = (index) => {
-		setTasks((prev) => {
-			const prevTasks = { ...prev };
-			prevTasks["todos"].items.splice(index, 1);
-			return prevTasks;
-		});
+		// si estanos borrando la tarea en processo, cancelamos ese proceso
+		if (taskInProgress && index === 0) {
+			setTaskInProgress(false)
+		}
+
+		const prevTasks = { ...tasks };
+		prevTasks["todos"].items.splice(index, 1);
+		setTasks(prevTasks);
 	};
 
 	// reseteamos el countdown de la tarea en 'todos' a la duracion de esta tarea

@@ -49,8 +49,8 @@ const useStyles = makeStyles((theme) => ({
 function Tasks() {
 
     const classes = useStyles();
-    
-    const { tasks, dropTask, showCompleted, setShowCompleted } = useContext(TaskTrackerContext);
+
+    const { tasks, dropTask, showCompleted, taskInProgress, setShowCompleted } = useContext(TaskTrackerContext);
 
     const [todoList, setTodoList] = useState([])
     const [completedList, setCompletedList] = useState([])
@@ -73,22 +73,13 @@ function Tasks() {
             setTodoList(tasks.todos.items)
             setCompletedList(tasks.completed.items)
         } else {
-            filterDuracion()
+            filterDuracion(duracion)
         }
         
     }, [tasks])
 
-    const filterDuracion = dur => {
-        let newTodos;
-        let newCompleted;
-
-        const filterLists = (min, max) => {
-            newTodos = tasks.todos.items.filter(item => item.duration >= min && item.duration <= max)
-            newCompleted = tasks.completed.items.filter(item => item.duration >= min && item.duration <= max)
-            setTodoList(newTodos)
-            setCompletedList(newCompleted)
-        }
-
+    const filterDuracion = dur => { 
+        
         if (dur === 1) {
            filterLists(1, 30)
         } else if (dur === 2) {
@@ -98,6 +89,23 @@ function Tasks() {
         }
     }
 
+
+    const filterLists = (min, max) => {
+        let newTodos;
+        let newCompleted;   
+
+        // filtramos los items segun la duracion min y max
+        const checkDur = (item, index) => {
+            // nunca filtramos la tarea en proceso, sin importar la duracion
+            return taskInProgress ? index === 0 || ( item.duration >= min && item.duration <= max) : 
+            item.duration >= min && item.duration <= max
+        }   
+        
+        newTodos = tasks.todos.items.filter(checkDur)
+        newCompleted = tasks.completed.items.filter(checkDur)
+        setTodoList(newTodos)
+        setCompletedList(newCompleted)
+    }
 
     // valida el drag and drop mueve el task de su origen a su destino 
     const onDragEnd = ({destination, source}) => {
@@ -119,6 +127,7 @@ function Tasks() {
             <Grid container>
                  {/* El contexto donde se podra hacer el DragDrop */}
                 <DragDropContext onDragEnd={onDragEnd}>
+                    
                     <Grid item container xs={12} className={classes.headerContainer}>    
                         <Grid item xs={6}>
                             <h3>Tareas</h3>
@@ -133,15 +142,17 @@ function Tasks() {
                                     : 
                                     "mostrar tareas realizadas"}
                             </Button>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
                             <Filters 
                                 setTodoList={setTodoList}
                                 setCompletedList={setCompletedList}
                                 handleDuracion={handleDuracion}
                                 duracion={duracion}
                             />
-                        </Grid>
+                    </Grid>
+                    
                     </Grid>
                      {/* El container de la lista tareas por hacer 
                      estilos diferentes cuando mostramos la lista de tareas terminadas y cuando no*/}
